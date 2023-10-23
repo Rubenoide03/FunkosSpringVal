@@ -1,11 +1,12 @@
 package dev.ruben.funkosspringval.services;
 
 import dev.ruben.funkosspringval.models.Funko;
+import dev.ruben.funkosspringval.models.Model;
 
 import java.util.List;
 import java.util.Optional;
 
-public class FunkoServiceImpl implements FunkoService{
+public class FunkoServiceImpl implements FunkoService {
 
     @Override
     public List<Funko> getAll() {
@@ -16,9 +17,11 @@ public class FunkoServiceImpl implements FunkoService{
     @Override
     public Optional<Funko> getFunkoById(Long id) {
 
+
     }
-    public List<Funko> getFunkoByModel(Long id){
-        
+
+    public List<Funko> getFunkoByModel(Model model) {
+
     }
 
     @Override
@@ -29,6 +32,7 @@ public class FunkoServiceImpl implements FunkoService{
 
     @Override
     public void deleteFunkoById(Long id) {
+
 
     }
 }
