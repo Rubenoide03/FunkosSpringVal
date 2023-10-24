@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -39,7 +40,7 @@ public class FunkoServiceImpl implements FunkoService {
 
     @Override
     @Cacheable
-    public Optional<Funko> getFunkoById(Long id) {
+    public Optional<Funko> getFunkoById(UUID id) {
         log.info("Getting funko by id");
         return funkosRepository.getById(id);
 
@@ -64,7 +65,7 @@ public class FunkoServiceImpl implements FunkoService {
 
     @Override
     @CacheEvict
-    public void deleteFunkoById(Long id) {
+    public void deleteFunkoById(UUID id) {
         log.info("Deleting funko by id");
         funkosRepository.deleteById(id);
 
@@ -89,7 +90,7 @@ public class FunkoServiceImpl implements FunkoService {
 
     @Override
     @CachePut
-    public void update(Long id ,Funko funko) {
+    public void update(UUID id ,Funko funko) {
         log.info("Updating funko");
         funkosRepository.update(id,funko);
 
