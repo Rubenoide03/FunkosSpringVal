@@ -1,5 +1,6 @@
 package dev.ruben.funkosspringval.services;
 
+import dev.ruben.funkosspringval.exceptions.FunkoNotFoundException;
 import dev.ruben.funkosspringval.models.Funko;
 import dev.ruben.funkosspringval.repositories.FunkosRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +55,7 @@ public class FunkoServiceImpl implements FunkoService {
 
     @Override
     @CachePut
-    public Optional<Funko> putFunko(Funko funko) {
+    public Optional<Funko> postFunko(Funko funko) {
         log.info("Putting funko");
         funkosRepository.put(funko);
         return Optional.of(funko);
@@ -67,6 +69,13 @@ public class FunkoServiceImpl implements FunkoService {
         funkosRepository.deleteById(id);
 
 
+
+    }
+
+    @Cacheable
+    public Funko getFunkosByName(String name) {
+        log.info("Getting funkos by model");
+        return funkosRepository.getByName(name).orElseThrow(() -> new FunkoNotFoundException("Funko con nombre " + name + " no encontrado"));
     }
 
     @Override
