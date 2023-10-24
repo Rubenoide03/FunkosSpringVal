@@ -1,11 +1,9 @@
 package dev.ruben.funkosspringval.models;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +22,7 @@ public class Funko {
     private String image;
     @NotNull (message = "El modelo no puede ser nulo")
     private Model model;
+    @PastOrPresent (message = "La fecha de creacion debe ser pasada o presente")
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

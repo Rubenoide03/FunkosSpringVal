@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface FunkoService {
     public List<Funko> getAll();
     public Optional<Funko> getFunkoById(Long id);
-    public Optional<Funko> putFunko(Funko funko);
+    public Optional<Funko> postFunko(Funko funko);
     public void deleteFunkoById(Long id);
     public void deleteAll();
     public Optional<Funko> getFunkoByName(String name);
