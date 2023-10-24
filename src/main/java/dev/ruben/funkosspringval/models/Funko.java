@@ -10,10 +10,9 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @Data
-
 public class Funko {
-    @NotNull (message = "El id no puede ser nulo")
-    private UUID id;
+
+    private Long id;
     @NotEmpty (message = "El nombre no puede estar vacio")
     private String name;
     @Positive (message = "El precio debe ser positivo")
@@ -21,8 +20,8 @@ public class Funko {
     @PositiveOrZero (message = "El stock debe ser positivo o cero")
     private int stock;
     private String image;
-    @NotNull (message = "El modelo no puede ser nulo")
-    private Model model;
+    @NotNull (message = "La categoria no puede ser nula")
+    private Model categoria;
     @PastOrPresent (message = "La fecha de creacion debe ser pasada o presente")
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -11,12 +11,12 @@ import java.util.UUID;
 public interface FunkosRepository {
 
      List<Funko> getAll();
-     Optional<Funko> getById(UUID id);
+     Optional<Funko> getById(Long id);
      void put(Funko funko);
-     void deleteById(UUID id);
+     void deleteById(Long id);
      void deleteAll();
      Optional<Funko> getByName(String name);
-     void update(UUID id,Funko funko);
+     void update(Long id,Funko funko);
 
 
 

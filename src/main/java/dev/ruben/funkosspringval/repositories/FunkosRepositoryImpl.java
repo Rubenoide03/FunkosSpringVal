@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public class FunkosRepositoryImpl implements FunkosRepository {
     private final List<Funko> funkos = new ArrayList<>();
-    private Long nextId = 1L;
+    private long nextId = 1;
 
     @Override
     public List<Funko> getAll() {
@@ -19,16 +19,18 @@ public class FunkosRepositoryImpl implements FunkosRepository {
     }
 
     @Override
-    public Optional<Funko> getById(UUID id) {
+    public Optional<Funko> getById(Long id) {
         return funkos.stream()
-                .filter(funko -> funko.getId()==(id))
-        .findFirst();}
+                .filter(funko -> funko.getId().equals(id))
+                .findFirst();
+    }
 
     @Override
     public void put(Funko funko) {
-        funko.setId(UUID.randomUUID());
+        funko.setId(nextId++);
         funkos.add(funko);
     }
+
     @Override
     public Optional<Funko> getByName(String name) {
         return funkos.stream()
@@ -36,9 +38,8 @@ public class FunkosRepositoryImpl implements FunkosRepository {
                 ;
     }
 
-    @Override
-    public void deleteById(UUID id) {
-        funkos.removeIf(funko -> funko.getId()==(id));
+    public void deleteById(Long id) {
+        funkos.removeIf(funko -> funko.getId() == (id));
     }
 
     @Override
@@ -47,15 +48,14 @@ public class FunkosRepositoryImpl implements FunkosRepository {
     }
 
 
-    public void update(UUID id, Funko funko) {
-        Optional<Funko> existingFunko = getById(id);
-        existingFunko.ifPresent(f -> {
-            f.setId(funko.getId());
+    public void update(Long id, Funko funko) {
+        Optional<Funko> funkoOptional = getById(id);
+        funkoOptional.ifPresent(f -> {
             f.setName(funko.getName());
             f.setPrice(funko.getPrice());
             f.setStock(funko.getStock());
             f.setImage(funko.getImage());
-            f.setModel(funko.getModel());
+            f.setCategoria(funko.getCategoria());
             f.setCreatedAt(funko.getCreatedAt());
             f.setUpdatedAt(funko.getUpdatedAt());
 
@@ -63,6 +63,6 @@ public class FunkosRepositoryImpl implements FunkosRepository {
     }
 
 
-    }
+}
 
 
