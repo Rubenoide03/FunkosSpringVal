@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class FunkosRepositoryImpl implements FunkosRepository {
@@ -18,14 +19,14 @@ public class FunkosRepositoryImpl implements FunkosRepository {
     }
 
     @Override
-    public Optional<Funko> getById(Long id) {
+    public Optional<Funko> getById(UUID id) {
         return funkos.stream()
                 .filter(funko -> funko.getId()==(id))
         .findFirst();}
 
     @Override
     public void put(Funko funko) {
-        funko.setId(nextId++);
+        funko.setId(UUID.randomUUID());
         funkos.add(funko);
     }
     @Override
@@ -36,7 +37,7 @@ public class FunkosRepositoryImpl implements FunkosRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         funkos.removeIf(funko -> funko.getId()==(id));
     }
 
@@ -45,8 +46,8 @@ public class FunkosRepositoryImpl implements FunkosRepository {
         funkos.clear();
     }
 
-    @Override
-    public void update(Long id, Funko funko) {
+
+    public void update(UUID id, Funko funko) {
         Optional<Funko> existingFunko = getById(id);
         existingFunko.ifPresent(f -> {
             f.setId(funko.getId());

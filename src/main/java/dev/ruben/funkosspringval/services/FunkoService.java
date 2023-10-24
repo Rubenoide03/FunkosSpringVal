@@ -4,15 +4,16 @@ import dev.ruben.funkosspringval.models.Funko;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface FunkoService {
     public List<Funko> getAll();
-    public Optional<Funko> getFunkoById(Long id);
+    public Optional<Funko> getFunkoById(UUID id);
     public Optional<Funko> postFunko(Funko funko);
-    public void deleteFunkoById(Long id);
+    public void deleteFunkoById(UUID id);
     public void deleteAll();
     public Optional<Funko> getFunkoByName(String name);
-    public void update(Long id,Funko funko);
+    public void update(UUID id,Funko funko);
 
 
 }

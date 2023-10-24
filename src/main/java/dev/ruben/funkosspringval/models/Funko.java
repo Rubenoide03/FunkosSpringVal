@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Data
 
 public class Funko {
     @NotNull (message = "El id no puede ser nulo")
-    private long id;
+    private UUID id;
     @NotEmpty (message = "El nombre no puede estar vacio")
     private String name;
     @Positive (message = "El precio debe ser positivo")
