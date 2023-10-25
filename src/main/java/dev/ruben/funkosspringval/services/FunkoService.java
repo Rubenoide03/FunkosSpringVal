@@ -1,6 +1,6 @@
 package dev.ruben.funkosspringval.services;
 
-import dev.ruben.funkosspringval.dto.FunkoDTO;
+import dev.ruben.funkosspringval.dto.FunkoDTOResponse;
 import dev.ruben.funkosspringval.models.Funko;
 
 import java.util.List;
@@ -8,13 +8,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface FunkoService {
-    List<FunkoDTO> getAll();
-    Optional<FunkoDTO> getFunkoById(Long id);
-    Optional<Funko> postFunko(Funko funko);
-    void deleteFunkoById(Long id);
-    void deleteAll();
-    Optional<FunkoDTO> getFunkoByName(String name);
-    public void update(Long id,Funko funko);
+    public List<FunkoDTOResponse> getAll();
+
+    public FunkoDTOResponse getFunkoById(Long id);
+    public Optional<Funko> postFunko(FunkoDTOResponse funkoDTO);
+    public void deleteFunkoById(Long id);
+    public void deleteAll();
+    public FunkoDTOResponse getFunkoByName(String name);
+    public Funko update(Long id, FunkoDTOResponse funkoDTO);
 
 
 }

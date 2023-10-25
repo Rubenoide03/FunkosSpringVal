@@ -1,5 +1,6 @@
 package dev.ruben.funkosspringval.repositories;
 
+import dev.ruben.funkosspringval.dto.FunkoDTOResponse;
 import dev.ruben.funkosspringval.models.Funko;
 import org.springframework.stereotype.Repository;
 
@@ -10,13 +11,13 @@ import java.util.UUID;
 @Repository
 public interface FunkosRepository {
 
-     List<Funko> getAll();
-     Optional<Funko> getById(Long id);
-     void put(Funko funko);
+     List<FunkoDTOResponse> getAll();
+     FunkoDTOResponse getById(Long id);
+     void put(FunkoDTOResponse funko);
      void deleteById(Long id);
      void deleteAll();
-     Optional<Funko> getByName(String name);
-     void update(Long id,Funko funko);
+     FunkoDTOResponse getByName(String name);
+     void update(Long id, FunkoDTOResponse funko);
 
 
 

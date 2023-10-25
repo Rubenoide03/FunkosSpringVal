@@ -1,45 +1,52 @@
 package dev.ruben.funkosspringval.repositories;
 
+import dev.ruben.funkosspringval.dto.FunkoDTOResponse;
+import dev.ruben.funkosspringval.exceptions.FunkoNotFoundException;
 import dev.ruben.funkosspringval.models.Funko;
 import org.springframework.stereotype.Repository;
+//funkoMapper
+import dev.ruben.funkosspringval.mappers.FunkoMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public class FunkosRepositoryImpl implements FunkosRepository {
     private final List<Funko> funkos = new ArrayList<>();
-    private long nextId = 1;
+    FunkoMapper funkoMapper = new FunkoMapper();
+    private Long nextId = 1L;
 
     @Override
-    public List<Funko> getAll() {
-        return funkos;
+    public List<FunkoDTOResponse> getAll() {
+        return funkoMapper.toDTO(funkos);
     }
 
     @Override
-    public Optional<Funko> getById(Long id) {
-        return funkos.stream()
-                .filter(funko -> funko.getId().equals(id))
-                .findFirst();
-    }
+    public FunkoDTOResponse getById(Long id) {
+        Funko funko = (funkos.stream()
+                .filter(funko1 -> funko1.getId()==(id))
+                .findFirst()).orElseThrow(() -> new FunkoNotFoundException("Funko con id " + id + " no encontrado"));
+    return funkoMapper.toDTO(funko);}
 
     @Override
-    public void put(Funko funko) {
+    public void put(FunkoDTOResponse funko) {
         funko.setId(nextId++);
-        funkos.add(funko);
+        funkos.add(funkoMapper.toFunko(funko));
+    }
+    @Override
+    public FunkoDTOResponse getByName(String name) {
+        Funko funko = (funkos.stream()
+                .filter(funko1 -> funko1.getName().equals(name))
+                .findFirst()).orElseThrow(() -> new FunkoNotFoundException("Funko con nombre " + name + " no encontrado"));
+        return funkoMapper.toDTO(funko);
+
+
     }
 
     @Override
-    public Optional<Funko> getByName(String name) {
-        return funkos.stream()
-                .filter(funko -> funko.getName().equals(name)).findFirst()
-                ;
-    }
-
     public void deleteById(Long id) {
-        funkos.removeIf(funko -> funko.getId() == (id));
+        funkos.removeIf(funko -> funko.getId().equals(id));
     }
 
     @Override
@@ -48,21 +55,23 @@ public class FunkosRepositoryImpl implements FunkosRepository {
     }
 
 
-    public void update(Long id, Funko funko) {
-        Optional<Funko> funkoOptional = getById(id);
-        funkoOptional.ifPresent(f -> {
+    public void update(Long id, FunkoDTOResponse funko) {
+        Optional<Funko> existingFunko = funkos.stream()
+                .filter(f -> f.getId().equals(id))
+                .findFirst();
+        existingFunko.ifPresent(f -> {
+            f.setId(funko.getId());
             f.setName(funko.getName());
             f.setPrice(funko.getPrice());
             f.setStock(funko.getStock());
             f.setImage(funko.getImage());
-            f.setCategoria(funko.getCategoria());
-            f.setCreatedAt(funko.getCreatedAt());
-            f.setUpdatedAt(funko.getUpdatedAt());
+            f.setModel(funko.getModel());
+
 
         });
     }
 
 
-}
+    }
 
 

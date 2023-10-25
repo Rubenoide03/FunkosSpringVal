@@ -1,6 +1,6 @@
 package dev.ruben.funkosspringval.services;
 
-import dev.ruben.funkosspringval.dto.FunkoDTO;
+import dev.ruben.funkosspringval.dto.FunkoDTOResponse;
 import dev.ruben.funkosspringval.exceptions.FunkoNotFoundException;
 import dev.ruben.funkosspringval.mappers.FunkoMapper;
 import dev.ruben.funkosspringval.models.Funko;
@@ -16,12 +16,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 @Slf4j
 @CacheConfig(cacheNames = "funkos")
 public class FunkoServiceImpl implements FunkoService {
-
 
     private final FunkosRepositoryImpl funkosRepository;
     private final FunkoMapper funkoMapper;
@@ -35,36 +33,53 @@ public class FunkoServiceImpl implements FunkoService {
 
     @Override
     @Cacheable
-    public List<FunkoDTO> getAll() {
+    public List<FunkoDTOResponse> getAll() {
         log.info("Getting all funkos");
-        return funkosRepository.getAll().stream().map(funkoMapper::toFunkoDTO).toList();
+        return funkosRepository.getAll();
 
 
     }
 
     @Override
     @Cacheable
-    public Optional<FunkoDTO> getFunkoById(Long id) {
+    public FunkoDTOResponse getFunkoById(Long id) {
         log.info("Getting funko by id");
-        return funkosRepository.getById((id)).map(funkoMapper::toFunkoDTO);
+        try {
+            FunkoDTOResponse funko = funkosRepository.getById(id);
+            return funko;
 
 
+        } catch (FunkoNotFoundException e) {
+            throw new FunkoNotFoundException("Funko con id " + id + " no encontrado");
 
+
+        }
     }
+
     @Override
     @Cacheable
-    public Optional<FunkoDTO> getFunkoByName(String name) {
+    public FunkoDTOResponse getFunkoByName(String name) {
         log.info("Getting funko by name");
-        return funkosRepository.getByName(name).map(funkoMapper::toFunkoDTO);
+        try {
+
+            FunkoDTOResponse funko = funkosRepository.getByName(name);
+            return funko;
+
+
+        } catch (FunkoNotFoundException e) {
+            throw new FunkoNotFoundException("Funko con nombre " + name + " no encontrado");
+        }
+
     }
 
 
     @Override
     @CachePut
-    public Optional<Funko> postFunko(Funko funko) {
+    public Optional<Funko> postFunko(FunkoDTOResponse funkoDTO) {
         log.info("Putting funko");
-        funkosRepository.put(funko);
-        return Optional.of(funko);
+
+        funkosRepository.put(funkoDTO);
+        return Optional.of(funkoMapper.toFunko(funkoDTO));
 
     }
 
@@ -75,14 +90,8 @@ public class FunkoServiceImpl implements FunkoService {
         funkosRepository.deleteById(id);
 
 
-
     }
 
-    @Cacheable
-    public Funko getFunkosByName(String name) {
-        log.info("Getting funkos by model");
-        return funkosRepository.getByName(name).orElseThrow(() -> new FunkoNotFoundException("Funko con nombre " + name + " no encontrado"));
-    }
 
     @Override
     @CacheEvict
@@ -95,9 +104,16 @@ public class FunkoServiceImpl implements FunkoService {
 
     @Override
     @CachePut
-    public void update(Long id ,Funko funko) {
+    public Funko update(Long id, FunkoDTOResponse funko) {
         log.info("Updating funko");
-        funkosRepository.update(id,funko);
+        try {
+            funkosRepository.update(id, funko);
+            return funkoMapper.toFunko(funko);
+
+        } catch (FunkoNotFoundException e) {
+            throw new FunkoNotFoundException("Funko con id " + id + " no encontrado");
+        }
+
 
 
     }

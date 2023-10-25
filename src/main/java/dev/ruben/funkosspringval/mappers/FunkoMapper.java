@@ -1,34 +1,52 @@
 package dev.ruben.funkosspringval.mappers;
 
-import dev.ruben.funkosspringval.dto.FunkoDTO;
+import dev.ruben.funkosspringval.dto.FunkoDTOResponse;
 import dev.ruben.funkosspringval.models.Funko;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
 public class FunkoMapper {
-    public FunkoDTO toFunkoDTO(Funko funko) {
-        return new FunkoDTO(
-                funko.getId(),
-                funko.getName(),
-                funko.getPrice(),
-                funko.getStock(),
-                funko.getImage(),
-                funko.getCategoria()
 
-        );
+    public FunkoDTOResponse toDTO(Funko funko){
+        return FunkoDTOResponse.builder()
+                .id(funko.getId())
+                .name(funko.getName())
+                .price(funko.getPrice())
+                .stock(funko.getStock())
+                .image(funko.getImage())
+                .model(funko.getModel())
+                .build();
+
+
     }
-    public Funko toFunko(FunkoDTO funkoDTO, Funko f) {
-        return new Funko(
-                f.getId(),
-                funkoDTO.getName() != null ? funkoDTO.getName() : f.getName(),
-                funkoDTO.getPrice() != null ? funkoDTO.getPrice() : f.getPrice(),
-                funkoDTO.getStock() != null ? funkoDTO.getStock() : f.getStock(),
-                funkoDTO.getImage() != null ? funkoDTO.getImage() : f.getImage(),
-                funkoDTO.getCategoria() != null ? funkoDTO.getCategoria() : f.getCategoria(),
-                f.getCreatedAt(),
-                f.getUpdatedAt()
-        );
+    public List<FunkoDTOResponse> toDTO(List<Funko> funkos){
+        return funkos.stream().map(this::toDTO).toList();
+
+
+
+
     }
+
+    public Funko toFunko(FunkoDTOResponse funkoDTOResponse) {
+        return Funko.builder()
+                .id(funkoDTOResponse.getId())
+                .name(funkoDTOResponse.getName())
+                .price(funkoDTOResponse.getPrice())
+                .stock(funkoDTOResponse.getStock())
+                .image(funkoDTOResponse.getImage())
+                .model(funkoDTOResponse.getModel())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
+
+
+
+
+
+
+
 }
