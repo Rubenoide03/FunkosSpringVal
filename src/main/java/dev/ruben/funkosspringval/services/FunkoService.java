@@ -14,7 +14,6 @@ public interface FunkoService {
     public Optional<Funko> postFunko(FunkoDTOResponse funkoDTO);
     public void deleteFunkoById(Long id);
     public void deleteAll();
-    public FunkoDTOResponse getFunkoByName(String name);
     public Funko update(Long id, FunkoDTOResponse funkoDTO);
 
 

@@ -1,6 +1,7 @@
 package dev.ruben.funkosspringval.repositories;
 
 import dev.ruben.funkosspringval.dto.FunkoDTOResponse;
+import dev.ruben.funkosspringval.exceptions.FunkoNotAvailableAddException;
 import dev.ruben.funkosspringval.exceptions.FunkoNotFoundException;
 import dev.ruben.funkosspringval.models.Funko;
 import org.springframework.stereotype.Repository;
@@ -25,34 +26,40 @@ public class FunkosRepositoryImpl implements FunkosRepository {
     @Override
     public FunkoDTOResponse getById(Long id) {
         Funko funko = (funkos.stream()
-                .filter(funko1 -> funko1.getId()==(id))
-                .findFirst()).orElseThrow(() -> new FunkoNotFoundException("Funko con id " + id + " no encontrado"));
-    return funkoMapper.toDTO(funko);}
+                .filter(funko1 -> funko1.getId() == (id))
+                .findFirst()).orElseThrow(() -> new FunkoNotFoundException("Funko con id " + id + " no ha sido encontrado"));
+        return funkoMapper.toDTO(funko);
+    }
 
     @Override
     public void put(FunkoDTOResponse funko) {
-        funko.setId(nextId++);
-        funkos.add(funkoMapper.toFunko(funko));
-    }
-    @Override
-    public FunkoDTOResponse getByName(String name) {
-        Funko funko = (funkos.stream()
-                .filter(funko1 -> funko1.getName().equals(name))
-                .findFirst()).orElseThrow(() -> new FunkoNotFoundException("Funko con nombre " + name + " no encontrado"));
-        return funkoMapper.toDTO(funko);
+        try {
+            funko.setId(nextId++);
+            funkos.add(funkoMapper.toFunko(funko));
 
+        } catch (FunkoNotAvailableAddException e) {
+            throw new FunkoNotAvailableAddException("Funko con el siguiente id " + nextId + " no encontrado y no se puedo actualizar");
+        }
 
     }
+
 
     @Override
     public void deleteById(Long id) {
-        funkos.removeIf(funko -> funko.getId().equals(id));
+        try {
+            funkos.removeIf(funko -> funko.getId().equals(id));
+
+        } catch (FunkoNotFoundException e) {
+            throw new FunkoNotFoundException("Funko con id " + id + " no encontrado");
+
+        }
     }
 
-    @Override
-    public void deleteAll() {
-        funkos.clear();
-    }
+        @Override
+        public void deleteAll () {
+            funkos.clear();
+        }
+
 
 
     public void update(Long id, FunkoDTOResponse funko) {
@@ -70,8 +77,9 @@ public class FunkosRepositoryImpl implements FunkosRepository {
 
         });
     }
+}
 
 
-    }
+
 
 

@@ -56,21 +56,6 @@ public class FunkoServiceImpl implements FunkoService {
         }
     }
 
-    @Override
-    @Cacheable
-    public FunkoDTOResponse getFunkoByName(String name) {
-        log.info("Getting funko by name");
-        try {
-
-            FunkoDTOResponse funko = funkosRepository.getByName(name);
-            return funko;
-
-
-        } catch (FunkoNotFoundException e) {
-            throw new FunkoNotFoundException("Funko con nombre " + name + " no encontrado");
-        }
-
-    }
 
 
     @Override
