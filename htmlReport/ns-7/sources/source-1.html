@@ -1,0 +1,188 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FunkosRepositoryImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">dev.ruben.funkosspringval.repositories</a>
+</div>
+
+<h1>Coverage Summary for Class: FunkosRepositoryImpl (dev.ruben.funkosspringval.repositories)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FunkosRepositoryImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    86.2%
+  </span>
+  <span class="absValue">
+    (25/29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package dev.ruben.funkosspringval.repositories;
+&nbsp;
+&nbsp;import dev.ruben.funkosspringval.dto.FunkoDTOResponse;
+&nbsp;import dev.ruben.funkosspringval.exceptions.FunkoNotAvailableAddException;
+&nbsp;import dev.ruben.funkosspringval.exceptions.FunkoNotFoundException;
+&nbsp;import dev.ruben.funkosspringval.models.Funko;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;//funkoMapper
+&nbsp;import dev.ruben.funkosspringval.mappers.FunkoMapper;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Repository
+<b class="fc">&nbsp;public class FunkosRepositoryImpl implements FunkosRepository {</b>
+<b class="fc">&nbsp;    private final List&lt;Funko&gt; funkos = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;    FunkoMapper funkoMapper = new FunkoMapper();</b>
+<b class="fc">&nbsp;    private Long nextId = 1L;</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;FunkoDTOResponse&gt; getAll() {
+<b class="fc">&nbsp;        return funkoMapper.toDTO(funkos);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public FunkoDTOResponse getById(Long id) {
+<b class="fc">&nbsp;        Funko funko = (funkos.stream()</b>
+<b class="fc">&nbsp;                .filter(funko1 -&gt; funko1.getId() == (id))</b>
+<b class="fc">&nbsp;                .findFirst()).orElseThrow(() -&gt; new FunkoNotFoundException(&quot;Funko con id &quot; + id + &quot; no ha sido encontrado&quot;));</b>
+<b class="fc">&nbsp;        return funkoMapper.toDTO(funko);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void put(FunkoDTOResponse funko) {
+&nbsp;        try {
+<b class="fc">&nbsp;            funko.setId(nextId++);</b>
+<b class="fc">&nbsp;            funkos.add(funkoMapper.toFunko(funko));</b>
+&nbsp;
+<b class="nc">&nbsp;        } catch (FunkoNotAvailableAddException e) {</b>
+<b class="nc">&nbsp;            throw new FunkoNotAvailableAddException(&quot;Funko con el siguiente id &quot; + nextId + &quot; no encontrado y no se puedo actualizar&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteById(Long id) {
+&nbsp;        try {
+<b class="fc">&nbsp;            funkos.removeIf(funko -&gt; funko.getId().equals(id));</b>
+&nbsp;
+<b class="nc">&nbsp;        } catch (FunkoNotFoundException e) {</b>
+<b class="nc">&nbsp;            throw new FunkoNotFoundException(&quot;Funko con id &quot; + id + &quot; no encontrado&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;        @Override
+&nbsp;        public void deleteAll () {
+<b class="fc">&nbsp;            funkos.clear();</b>
+&nbsp;        }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    public void update(Long id, FunkoDTOResponse funko) {
+<b class="fc">&nbsp;        Optional&lt;Funko&gt; existingFunko = funkos.stream()</b>
+<b class="fc">&nbsp;                .filter(f -&gt; f.getId().equals(id))</b>
+<b class="fc">&nbsp;                .findFirst();</b>
+<b class="fc">&nbsp;        existingFunko.ifPresent(f -&gt; {</b>
+<b class="fc">&nbsp;            f.setId(funko.getId());</b>
+<b class="fc">&nbsp;            f.setName(funko.getName());</b>
+<b class="fc">&nbsp;            f.setPrice(funko.getPrice());</b>
+<b class="fc">&nbsp;            f.setStock(funko.getStock());</b>
+<b class="fc">&nbsp;            f.setImage(funko.getImage());</b>
+<b class="fc">&nbsp;            f.setModel(funko.getModel());</b>
+&nbsp;
+&nbsp;
+&nbsp;        });
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-26 19:40</div>
+</div>
+</body>
+</html>

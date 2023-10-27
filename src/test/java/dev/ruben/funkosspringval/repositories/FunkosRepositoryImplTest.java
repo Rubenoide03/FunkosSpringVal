@@ -20,14 +20,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class FunkosRepositoryImplTest {
     @Autowired
     private FunkosRepository funkosRepository;
+    final FunkoDTOResponse funko1 = new FunkoDTOResponse(1L, "Funko1", 10.0, 10, "image", Model.ANIME);
+    final FunkoDTOResponse funko2 = new FunkoDTOResponse(2L, "Funko2", 10.0, 10, "image", Model.ANIME);
 
     @BeforeEach
     void setUp() {
-        List<FunkoDTOResponse> funkos = new ArrayList<>();
-        FunkoDTOResponse funko1 = new FunkoDTOResponse(1L, "Funko1", 10.0, 10, "image", Model.ANIME);
-        FunkoDTOResponse funko2 = new FunkoDTOResponse(2L, "Funko2", 10.0, 10, "image", Model.ANIME);
-        funkos.add(funko1);
-        funkos.add(funko2);
+
+        funkosRepository = new FunkosRepositoryImpl();
+        funkosRepository.put(funko1);
+        funkosRepository.put(funko2);
+
+
 
     }
 
@@ -49,9 +52,10 @@ class FunkosRepositoryImplTest {
     void put() {
         FunkoDTOResponse funko = new FunkoDTOResponse(3L, "Funko3", 10.0, 10, "image", Model.ANIME);
         funkosRepository.put(funko);
+        var all = funkosRepository.getAll();
         assertAll(
                 () -> assertNotNull(funkosRepository),
-                () -> assertEquals(3, funkosRepository.getAll().size()));
+                () -> assertEquals(3, all.size()));
 
 
     }
