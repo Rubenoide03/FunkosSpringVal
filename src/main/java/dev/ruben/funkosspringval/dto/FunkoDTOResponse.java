@@ -12,6 +12,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
+
 public class FunkoDTOResponse {
 
     private Long id;
