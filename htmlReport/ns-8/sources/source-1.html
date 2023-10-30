@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html id="htmlId">
 <head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
   <title>Coverage Report > FunkoServiceImpl</title>
   <style type="text/css">
     @import "../../css/coverage.css";
@@ -51,18 +52,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    37.5%
+    100%
   </span>
   <span class="absValue">
-    (3/8)
+    (8/8)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    30.4%
+    82.6%
   </span>
   <span class="absValue">
-    (7/23)
+    (19/23)
   </span>
 </td>
 </tr>
@@ -110,8 +111,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    @Override
 &nbsp;    @Cacheable
 &nbsp;    public List&lt;FunkoDTOResponse&gt; getAll() {
-<b class="nc">&nbsp;        log.info(&quot;Getting all funkos&quot;);</b>
-<b class="nc">&nbsp;        return funkosRepository.getAll();</b>
+<b class="fc">&nbsp;        log.info(&quot;Getting all funkos&quot;);</b>
+<b class="fc">&nbsp;        return funkosRepository.getAll();</b>
 &nbsp;
 &nbsp;
 &nbsp;    }
@@ -119,10 +120,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    @Override
 &nbsp;    @Cacheable
 &nbsp;    public FunkoDTOResponse getFunkoById(Long id) {
-<b class="nc">&nbsp;        log.info(&quot;Getting funko by id&quot;);</b>
+<b class="fc">&nbsp;        log.info(&quot;Getting funko by id&quot;);</b>
 &nbsp;        try {
-<b class="nc">&nbsp;            FunkoDTOResponse funko = funkosRepository.getById(id);</b>
-<b class="nc">&nbsp;            return funko;</b>
+<b class="fc">&nbsp;            FunkoDTOResponse funko = funkosRepository.getById(id);</b>
+<b class="fc">&nbsp;            return funko;</b>
 &nbsp;
 &nbsp;
 <b class="nc">&nbsp;        } catch (FunkoNotFoundException e) {</b>
@@ -147,8 +148,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    @Override
 &nbsp;    @CacheEvict
 &nbsp;    public void deleteFunkoById(Long id) {
-<b class="nc">&nbsp;        log.info(&quot;Deleting funko by id&quot;);</b>
-<b class="nc">&nbsp;        funkosRepository.deleteById(id);</b>
+<b class="fc">&nbsp;        log.info(&quot;Deleting funko by id&quot;);</b>
+<b class="fc">&nbsp;        funkosRepository.deleteById(id);</b>
 &nbsp;
 &nbsp;
 &nbsp;    }
@@ -157,8 +158,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    @Override
 &nbsp;    @CacheEvict
 &nbsp;    public void deleteAll() {
-<b class="nc">&nbsp;        log.info(&quot;Deleting all funkos&quot;);</b>
-<b class="nc">&nbsp;        funkosRepository.deleteAll();</b>
+<b class="fc">&nbsp;        log.info(&quot;Deleting all funkos&quot;);</b>
+<b class="fc">&nbsp;        funkosRepository.deleteAll();</b>
 &nbsp;
 &nbsp;
 &nbsp;    }
@@ -166,10 +167,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    @Override
 &nbsp;    @CachePut
 &nbsp;    public Funko update(Long id, FunkoDTOResponse funko) {
-<b class="nc">&nbsp;        log.info(&quot;Updating funko&quot;);</b>
+<b class="fc">&nbsp;        log.info(&quot;Updating funko&quot;);</b>
 &nbsp;        try {
-<b class="nc">&nbsp;            funkosRepository.update(id, funko);</b>
-<b class="nc">&nbsp;            return funkoMapper.toFunko(funko);</b>
+<b class="fc">&nbsp;            funkosRepository.update(id, funko);</b>
+<b class="fc">&nbsp;            return funkoMapper.toFunko(funko);</b>
 &nbsp;
 <b class="nc">&nbsp;        } catch (FunkoNotFoundException e) {</b>
 <b class="nc">&nbsp;            throw new FunkoNotFoundException(&quot;Funko con id &quot; + id + &quot; no encontrado&quot;);</b>
@@ -203,7 +204,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2023-10-26 19:40</div>
+    <div style="float:right;">generated on 2023-10-30 13:47</div>
 </div>
 </body>
 </html>

@@ -20,7 +20,7 @@ public class FunkosRepositoryImpl implements FunkosRepository {
 
     @Override
     public List<FunkoDTOResponse> getAll() {
-        return funkoMapper.toDTO(funkos);
+        return funkoMapper.ListtoDTO(funkos);
     }
 
     @Override

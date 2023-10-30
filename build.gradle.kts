@@ -28,7 +28,11 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-}
+    testImplementation("org.junit.jupiter:junit-jupiter")
+
+    }
+
+
 
 tasks.withType<Test> {
     useJUnitPlatform()

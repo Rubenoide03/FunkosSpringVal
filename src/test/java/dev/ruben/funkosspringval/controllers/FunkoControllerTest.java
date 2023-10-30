@@ -3,10 +3,12 @@ package dev.ruben.funkosspringval.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.ruben.funkosspringval.dto.FunkoDTOResponse;
+import dev.ruben.funkosspringval.models.Funko;
 import dev.ruben.funkosspringval.models.Model;
 import dev.ruben.funkosspringval.services.FunkoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +17,32 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.http.MediaType;
+
+import static org.springframework.http.RequestEntity.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,9 +53,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class FunkoControllerTest {
 
-    private final ObjectMapper mapper=new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    private final String endPoint="/api/funkos";
+    private final String endPoint = "/api/funkos";
 
     @Autowired
     MockMvc mockMvc;
@@ -43,7 +63,7 @@ class FunkoControllerTest {
     private FunkoService funkoService;
     @Autowired
     private JacksonTester<FunkoDTOResponse> jsonFunkoDto;
-    private final FunkoDTOResponse funko1= FunkoDTOResponse.builder()
+    private final FunkoDTOResponse funko1 = FunkoDTOResponse.builder()
             .id(1L)
             .name("Funko1")
             .price(10.0)
@@ -51,7 +71,7 @@ class FunkoControllerTest {
             .image("image")
             .model(Model.ANIME)
             .build();
-    private final FunkoDTOResponse funko2=FunkoDTOResponse.builder()
+    private final FunkoDTOResponse funko2 = FunkoDTOResponse.builder()
             .id(1L)
             .name("Funko2")
             .price(40.0)
@@ -74,29 +94,91 @@ class FunkoControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        assertEquals(2, funkoLista.size());
     }
 
+
     @Test
-    void getFunkoById() {
+    void getFunkoById() throws Exception {
         var funkoADevolver = funko1;
         Long id = 1L;
         Mockito.when(funkoService.getFunkoById(id)).thenReturn(funkoADevolver);
+        mockMvc.perform(get(endPoint + "/{id}", id)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        assertEquals(1L, funkoADevolver.getId());
 
     }
 
     @Test
-    void deleteAll() {
+    void deleteAll() throws Exception {
+        doNothing().when(funkoService).deleteAll();
+        mockMvc.perform(MockMvcRequestBuilders.delete(endPoint))
+                .andExpect(status().isNoContent());
+        Mockito.verify(funkoService, times(1)).deleteAll();
+        assertEquals(0, funkoService.getAll().size());
+
+
     }
 
     @Test
-    void deleteFunkoById() {
+    void deleteFunkoById() throws Exception {
+        var endPointTest = endPoint + "/{1}";
+        Long id = 1L;
+        mockMvc.perform(MockMvcRequestBuilders.delete(endPoint + "/{id}", id))
+                .andExpect(status().isNoContent());
+        Mockito.verify(funkoService, times(1)).deleteFunkoById(id);
+        assertEquals(0, funkoService.getAll().size());
+        assertNull(funkoService.getFunkoById(id));
+
+
+    }
+
+
+
+
+
+    @Test
+    void updateFunko() throws Exception {
+        Long id = 1L;
+        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.
+                put(endPoint + "/{id}", id).contentType(MediaType.APPLICATION_JSON).content(
+                        jsonFunkoDto.write(new FunkoDTOResponse(1L, "Funko1", 10.0, 10, "image", Model.ANIME)).getJson()
+                )).andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
-    void updateFunko() {
+   void postFunko() throws Exception {
+        FunkoDTOResponse funkoDTOResponse= new FunkoDTOResponse(3L,"Funko3",10.0,10,"image",Model.ANIME);
+        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.
+                post(endPoint).contentType(MediaType.APPLICATION_JSON).content(
+                        jsonFunkoDto.write(funkoDTOResponse).getJson()
+                )).andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+
+
+
+        FunkoDTOResponse res = mapper.readValue(response.getContentAsString(), FunkoDTOResponse.class);
+        assertAll(
+                () -> assertEquals(201, response.getStatus()),
+                () -> assertEquals(3L, res.getId()),
+                () -> assertEquals("Funko3", res.getName()),
+                () -> assertEquals(10.0, res.getPrice()),
+                () -> assertEquals(10, res.getStock()),
+                () -> assertEquals("image", res.getImage()),
+                () -> assertEquals(Model.ANIME, res.getModel())
+
+        );
+
+        Mockito.verify(funkoService, times(1)).postFunko(any(FunkoDTOResponse.class));
     }
 
-    @Test
-    void postFunko() {
-    }
+
+
+
 }
+

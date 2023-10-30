@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html id="htmlId">
 <head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
   <title>Coverage Report > FunkoController</title>
   <style type="text/css">
     @import "../../css/coverage.css";
@@ -51,18 +52,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    20%
+    70%
   </span>
   <span class="absValue">
-    (2/10)
+    (7/10)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    14.7%
+    55.9%
   </span>
   <span class="absValue">
-    (5/34)
+    (19/34)
   </span>
 </td>
 </tr>
@@ -115,18 +116,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;    @GetMapping(&quot;&quot;)
 &nbsp;    public ResponseEntity&lt;List&lt;FunkoDTOResponse&gt;&gt; getAllFunkos() {
-<b class="nc">&nbsp;        log.info(&quot;Getting all funkos&quot;);</b>
-<b class="nc">&nbsp;        return ResponseEntity.ok(funkoService.getAll());</b>
+<b class="fc">&nbsp;        log.info(&quot;Getting all funkos&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(funkoService.getAll());</b>
 &nbsp;
 &nbsp;    }
 &nbsp;
 &nbsp;    @GetMapping(&quot;/{id}&quot;)
 &nbsp;    public ResponseEntity&lt;FunkoDTOResponse&gt; getFunkoById(@PathVariable Long id) {
 &nbsp;
-<b class="nc">&nbsp;        log.info(&quot;Getting funko by id&quot;);</b>
+<b class="fc">&nbsp;        log.info(&quot;Getting funko by id&quot;);</b>
 &nbsp;        try {
-<b class="nc">&nbsp;            FunkoDTOResponse funko = funkoService.getFunkoById(id);</b>
-<b class="nc">&nbsp;            return ResponseEntity.ok(funkoService.getFunkoById(id)</b>
+<b class="fc">&nbsp;            FunkoDTOResponse funko = funkoService.getFunkoById(id);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(funkoService.getFunkoById(id)</b>
 &nbsp;            );
 &nbsp;
 <b class="nc">&nbsp;        }catch (FunkoNotFoundException e){</b>
@@ -139,24 +140,24 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;    @DeleteMapping(&quot;&quot;)
 &nbsp;    public ResponseEntity&lt;Void&gt; deleteAll(){
-<b class="nc">&nbsp;        log.info(&quot;Deleting all funkos&quot;);</b>
-<b class="nc">&nbsp;        funkoService.deleteAll();</b>
-<b class="nc">&nbsp;        return ResponseEntity.noContent().build();</b>
+<b class="fc">&nbsp;        log.info(&quot;Deleting all funkos&quot;);</b>
+<b class="fc">&nbsp;        funkoService.deleteAll();</b>
+<b class="fc">&nbsp;        return ResponseEntity.noContent().build();</b>
 &nbsp;
 &nbsp;    }
 &nbsp;    @DeleteMapping(&quot;/{id}&quot;)
 &nbsp;    public ResponseEntity&lt;Void&gt; deleteFunkoById(@PathVariable Long id){
-<b class="nc">&nbsp;        log.info(&quot;Deleting funko by id&quot;);</b>
-<b class="nc">&nbsp;        funkoService.deleteFunkoById(id);</b>
+<b class="fc">&nbsp;        log.info(&quot;Deleting funko by id&quot;);</b>
+<b class="fc">&nbsp;        funkoService.deleteFunkoById(id);</b>
 &nbsp;
-<b class="nc">&nbsp;        return ResponseEntity.noContent().build();</b>
+<b class="fc">&nbsp;        return ResponseEntity.noContent().build();</b>
 &nbsp;    }
 &nbsp;    @PutMapping(&quot;/{id}&quot;)
 &nbsp;    public ResponseEntity&lt;Funko&gt; updateFunko(@PathVariable Long id, @Valid @RequestBody FunkoDTOResponse funko){
-<b class="nc">&nbsp;        log.info(&quot;Updating funko&quot;);</b>
+<b class="fc">&nbsp;        log.info(&quot;Updating funko&quot;);</b>
 &nbsp;        try {
-<b class="nc">&nbsp;            funkoService.update(id, funko);</b>
-<b class="nc">&nbsp;            return ResponseEntity.ok(funkoService.update(id, funko));</b>
+<b class="fc">&nbsp;            funkoService.update(id, funko);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok(funkoService.update(id, funko));</b>
 &nbsp;
 <b class="nc">&nbsp;        }catch (FunkoNotFoundException e){</b>
 <b class="nc">&nbsp;            throw new FunkoNotFoundException(&quot;Funko con id &quot; + id + &quot; no encontrado&quot;);</b>
@@ -215,7 +216,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2023-10-26 19:40</div>
+    <div style="float:right;">generated on 2023-10-30 13:47</div>
 </div>
 </body>
 </html>

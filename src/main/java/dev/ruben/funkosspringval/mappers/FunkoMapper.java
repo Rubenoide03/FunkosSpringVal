@@ -22,7 +22,7 @@ public class FunkoMapper {
 
 
     }
-    public List<FunkoDTOResponse> toDTO(List<Funko> funkos){
+    public List<FunkoDTOResponse> ListtoDTO(List<Funko> funkos){
         return funkos.stream().map(this::toDTO).toList();
 
 

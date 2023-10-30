@@ -1,14 +1,14 @@
 package dev.ruben.funkosspringval.services;
 
 import dev.ruben.funkosspringval.dto.FunkoDTOResponse;
+import dev.ruben.funkosspringval.exceptions.FunkoNotAvailableAddException;
 import dev.ruben.funkosspringval.mappers.FunkoMapper;
+import dev.ruben.funkosspringval.models.Funko;
 import dev.ruben.funkosspringval.models.Model;
 import dev.ruben.funkosspringval.repositories.FunkosRepository;
 import dev.ruben.funkosspringval.repositories.FunkosRepositoryImpl;
-import jakarta.annotation.security.RunAs;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -19,8 +19,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+
 @SpringBootTest
 class FunkoServiceImplTest {
     final FunkoDTOResponse funko1 = new FunkoDTOResponse(1L, "Funko1", 10.0, 10, "image", Model.ANIME);
@@ -41,7 +44,7 @@ class FunkoServiceImplTest {
         List<FunkoDTOResponse> funkos = funkoService.getAll();
         assertEquals(1, funkos.size());
         Mockito.when(funkosRepository.getAll()).thenReturn(funkos);
-        Mockito.verify(funkosRepository, Mockito.times(1)).getAll();
+        Mockito.verify(funkosRepository, times(1)).getAll();
 
     }
 
@@ -52,36 +55,58 @@ class FunkoServiceImplTest {
         FunkoDTOResponse funko = funkoService.getFunkoById(id);
         assertEquals(1L, funko.getId());
         Mockito.when(funkosRepository.getById(id)).thenReturn(funko);
-        Mockito.verify(funkosRepository, Mockito.times(1)).getById(Mockito.anyLong());
+        Mockito.verify(funkosRepository, times(1)).getById(Mockito.anyLong());
     }
 
     @Test
     void postFunko() {
-        Mockito.when(funkoService.postFunko(funko1));
-        funkoService.postFunko(funko1);
-        Mockito.verify(funkosRepository, Mockito.times(1)).put(funko1);
+        FunkoDTOResponse newFunkoDTO = new FunkoDTOResponse(2L, "Funko2", 15.0, 5, "image2", Model.ANIME);
+        Funko newFunko = new Funko(2L, "Funko2", 15.0, 5, "image2", Model.ANIME, null, null);
+
+        Mockito.when(funkoMapper.toFunko(newFunkoDTO)).thenReturn(newFunko);
+        Funko funkoCreado = funkoService.postFunko(newFunkoDTO).orElse(null);
+        assertAll(
+                () -> assertEquals(2L, funkoCreado.getId()),
+                () -> assertEquals("Funko2", funkoCreado.getName()),
+                () -> assertEquals(15.0, funkoCreado.getPrice()),
+                () -> assertEquals(5, funkoCreado.getStock()),
+                () -> assertEquals("image2", funkoCreado.getImage()),
+                () -> assertEquals(Model.ANIME, funkoCreado.getModel()),
+                () -> assertNull(funkoCreado.getCreatedAt()),
+                () -> assertNull(funkoCreado.getUpdatedAt())
+        );
     }
+
 
     @Test
     void deleteFunkoById() {
         Long id = 1L;
         funkoService.deleteFunkoById(id);
-        Mockito.verify(funkosRepository, Mockito.times(1)).deleteById(id);
+        Mockito.verify(funkosRepository, times(1)).deleteById(id);
+        assertEquals(0, funkoService.getAll().size());
     }
 
     @Test
     void deleteAll() {
         funkoService.deleteAll();
-        Mockito.verify(funkosRepository, Mockito.times(1)).deleteAll();
+        Mockito.verify(funkosRepository, times(1)).deleteAll();
 
 
     }
 
     @Test
     void update() {
-        Mockito.when(funkoService.update(1L, funko1));
-        funkoService.update(1L, funko1);
-        Mockito.verify(funkosRepository, Mockito.times(1)).update(1L, funko1);
+        Long id = 1L;
+        FunkoDTOResponse funkoAActualizar = new FunkoDTOResponse(1L, "UpdatedFunko", 20.0, 15, "updatedImage", Model.ANIME);
+
+        //Mockito.when(funkoService.update(id, funkoAActualizar)).thenReturn(funkoAActualizar);
+
+        Mockito.when(funkoMapper.toFunko(funkoAActualizar)).thenReturn(new Funko( 1L, "UpdatedFunko", 20.0, 15, "updatedImage", Model.ANIME, null, null));
+
+        Funko result = funkoService.update(id, funkoAActualizar);
+
+        assertEquals(funkoAActualizar.getId(), result.getId());
+        Mockito.verify(funkosRepository, times(1)).update(id, new FunkoDTOResponse( 1L, "UpdatedFunko", 20.0, 15, "updatedImage", Model.ANIME));
 
 
     }
