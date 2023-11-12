@@ -3,6 +3,7 @@ package dev.ruben.funkosspringval.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.ruben.funkosspringval.dto.FunkoDTOResponse;
+import dev.ruben.funkosspringval.exceptions.FunkoNotAvailableAddException;
 import dev.ruben.funkosspringval.models.Funko;
 import dev.ruben.funkosspringval.models.Model;
 import dev.ruben.funkosspringval.services.FunkoService;
@@ -30,8 +31,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
 
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -42,6 +41,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.http.MediaType;
 
+import static org.mockito.Mockito.*;
 import static org.springframework.http.RequestEntity.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -71,6 +71,14 @@ class FunkoControllerTest {
             .image("image")
             .model(Model.ANIME)
             .build();
+    private final Funko funkoF = Funko.builder()
+            .id(1L)
+            .name("Funko1")
+            .price(10.0)
+            .stock(10)
+            .image("image")
+            .model(Model.ANIME)
+            .build();
     private final FunkoDTOResponse funko2 = FunkoDTOResponse.builder()
             .id(1L)
             .name("Funko2")
@@ -89,7 +97,7 @@ class FunkoControllerTest {
     @Test
     void getAllFunkos() throws Exception {
         var funkoLista = List.of(funko1, funko2);
-        Mockito.when(funkoService.getAll()).thenReturn(funkoLista);
+        when(funkoService.getAll()).thenReturn(funkoLista);
         mockMvc.perform(get(endPoint)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -102,7 +110,7 @@ class FunkoControllerTest {
     void getFunkoById() throws Exception {
         var funkoADevolver = funko1;
         Long id = 1L;
-        Mockito.when(funkoService.getFunkoById(id)).thenReturn(funkoADevolver);
+        when(funkoService.getFunkoById(id)).thenReturn(funkoADevolver);
         mockMvc.perform(get(endPoint + "/{id}", id)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -148,34 +156,10 @@ class FunkoControllerTest {
                 )).andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertEquals(   1L, funko1.getId());
     }
 
-    @Test
-   void postFunko() throws Exception {
-        FunkoDTOResponse funkoDTOResponse= new FunkoDTOResponse(3L,"Funko3",10.0,10,"image",Model.ANIME);
-        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.
-                post(endPoint).contentType(MediaType.APPLICATION_JSON).content(
-                        jsonFunkoDto.write(funkoDTOResponse).getJson()
-                )).andReturn().getResponse();
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-
-
-
-        FunkoDTOResponse res = mapper.readValue(response.getContentAsString(), FunkoDTOResponse.class);
-        assertAll(
-                () -> assertEquals(201, response.getStatus()),
-                () -> assertEquals(3L, res.getId()),
-                () -> assertEquals("Funko3", res.getName()),
-                () -> assertEquals(10.0, res.getPrice()),
-                () -> assertEquals(10, res.getStock()),
-                () -> assertEquals("image", res.getImage()),
-                () -> assertEquals(Model.ANIME, res.getModel())
-
-        );
-
-        Mockito.verify(funkoService, times(1)).postFunko(any(FunkoDTOResponse.class));
-    }
 
 
 

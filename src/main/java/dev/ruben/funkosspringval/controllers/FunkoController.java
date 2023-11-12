@@ -24,8 +24,6 @@ import java.util.*;
 public class FunkoController {
 
 
-
-
     FunkoService funkoService;
 
     @Autowired
@@ -53,51 +51,47 @@ public class FunkoController {
             return ResponseEntity.ok(funkoService.getFunkoById(id)
             );
 
-        }catch (FunkoNotFoundException e){
+        } catch (FunkoNotFoundException e) {
             throw new FunkoNotFoundException("Funko con id " + id + " no encontrado");
         }
-
 
 
     }
 
     @DeleteMapping("")
-    public ResponseEntity<Void> deleteAll(){
+    public ResponseEntity<Void> deleteAll() {
         log.info("Deleting all funkos");
         funkoService.deleteAll();
         return ResponseEntity.noContent().build();
 
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFunkoById(@PathVariable Long id){
+    public ResponseEntity<Void> deleteFunkoById(@PathVariable Long id) {
         log.info("Deleting funko by id");
         funkoService.deleteFunkoById(id);
 
         return ResponseEntity.noContent().build();
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Funko> updateFunko(@PathVariable Long id, @Valid @RequestBody FunkoDTOResponse funko){
+    public ResponseEntity<Funko> updateFunko(@PathVariable Long id, @Valid @RequestBody FunkoDTOResponse funko) {
         log.info("Updating funko");
-        try {
-            funkoService.update(id, funko);
-            return ResponseEntity.ok(funkoService.update(id, funko));
 
-        }catch (FunkoNotFoundException e){
-            throw new FunkoNotFoundException("Funko con id " + id + " no encontrado");
-        }
+        funkoService.update(id, funko);
+        return ResponseEntity.ok(funkoService.update(id, funko));
+
 
     }
+
     @PostMapping("")
-    public ResponseEntity<Funko> postFunko(@Valid @RequestBody FunkoDTOResponse funko){
+    public ResponseEntity<Funko> postFunko(@Valid @RequestBody FunkoDTOResponse funko) {
         log.info("Posting funko");
-        try {
-            funkoService.postFunko(funko);
-            return ResponseEntity.status(HttpStatus.CREATED).body(funkoService.postFunko(funko).get());
-        }catch (FunkoNotFoundException e){
-            throw new FunkoNotFoundException("Funko con id " + funko.getId() + " no encontrado");
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(funkoService.postFunko(funko).get());
+
 
     }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
@@ -109,10 +103,6 @@ public class FunkoController {
         });
         return errors;
     }
-
-
-
-
 
 
 }

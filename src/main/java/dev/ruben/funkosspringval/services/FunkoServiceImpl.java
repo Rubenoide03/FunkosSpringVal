@@ -4,7 +4,6 @@ import dev.ruben.funkosspringval.dto.FunkoDTOResponse;
 import dev.ruben.funkosspringval.exceptions.FunkoNotFoundException;
 import dev.ruben.funkosspringval.mappers.FunkoMapper;
 import dev.ruben.funkosspringval.models.Funko;
-import dev.ruben.funkosspringval.repositories.FunkosRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;

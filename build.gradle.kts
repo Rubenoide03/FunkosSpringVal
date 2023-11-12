@@ -29,6 +29,10 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    //h2
+    runtimeOnly("com.h2database:h2")
+
 
     }
 
